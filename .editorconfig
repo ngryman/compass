@@ -1,0 +1,22 @@
+root = true
+
+[*.js]
+; EditorConfig supported properties
+indent_style = tab
+trim_trailing_whitespace = true
+end_of_line = lf
+insert_final_newline = true
+
+; CodePainter extended properties
+quote_type = auto
+spaces_around_operators = true
+space_after_control_statements = true
+space_after_anonymous_functions = false
+spaces_in_brackets = false
+
+[*.yml]
+indent_style = space
+indent_size = 2
+
+[node_modules/**.js]
+codepaint = false

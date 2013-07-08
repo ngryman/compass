@@ -1,26 +1,38 @@
 {
     "name": "compass",
-    "version": "0.1.0",
+    "version": "0.2.0",
+    "author": "Nicolas Gryman",
     "description": "Compass for node.js",
+    "contributors": [
+        "Nicolas Gryman",
+        "Jed Hunsaker"
+    ],
     "main": "index.js",
+    "bin": {
+        "compass": "./bin/compass"
+    },
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "test": "mocha -R spec"
     },
     "repository": {
         "type": "git",
-        "url": "git@github.com:ngryman/compass.git"
+        "url": "https://github.com/ngryman/compass.git"
     },
     "keywords": [
         "compass",
         "sass",
         "scss"
     ],
-    "author": "Nicolas Gryman",
+    "bugs": "https://github.com/ngryman/compass/issues",
     "license": "MIT",
+    "dependencies": {
+        "gitlike-cli": "~0.0.9",
+        "node-sass": "~0.5.2"
+    },
     "devDependencies": {
-        "mocha": "1.8.x",
-        "chai": "1.5.x",
-        "express": "3.1.x",
-        "supertest": "0.5.x"
+        "mocha": "~1.12.0",
+        "chai": "~1.7.2",
+        "express": "~3.3.3",
+        "supertest": "~0.7.1"
     }
 }
