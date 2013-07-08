@@ -1,0 +1,246 @@
+#!/usr/bin/env node
+
+var clc = require('cli-color');
+var program = require('gitlike-cli');
+
+var commands = require('../lib/commands');
+var compass = require('../');
+var package = require('../package');
+
+
+function error(msg){
+	msg = 'Error: ' + msg;
+	if (useColor) {
+		msg = clc.red(msg);
+	}
+	msg = '\n  ' + msg;
+	if (typeof arguments[1] !== 'undefined') {
+		console.log(msg, arguments[1]);
+	} else {
+		console.log(msg);
+	}
+}
+
+program.on('error', function(err){
+    console.log('');
+    console.log(clc.red('  ' + err.name + ':', err.message));
+    err.command.outputUsage();
+    err.command.outputCommands();
+    err.command.outputOptions();
+    console.log();
+    process.exit(1);
+});
+
+program
+
+	.version(package.version)
+	.description(package.description)
+
+	.on('help', function(cmd) {
+		cmd.outputIndented('Description', [
+			'The Compass Stylesheet Authoring Framework helps you',
+			'build and maintain your stylesheets and makes it easy',
+			'for you to use stylesheet libraries provided by others.'
+		]);
+		cmd.outputIndented('Donating', [
+			'Compass is charityware. If you find it useful please make',
+			'a tax deductable donation: http://umdf.org/compass'
+		]);
+	})
+
+
+	// Primary Commands
+	.command('clean [projectPath]')
+		.description('Remove generated files and the sass cache')
+		.action(commands.clean)
+		.option('--relative-assets', 'Make compass asset helpers generate relative URLs to assets')
+		.option('--no-line-comments', 'Disable line comments')
+		.parent
+
+	.command('compile [<projectPathOrSourceFile>...]')
+		.description('Compile Sass stylesheets to CSS')
+		.action(commands.compile)
+		.option('--time', 'Display compilation times')
+		.option('--debug-info', "Turns on sass's debugging information")
+		.option('--no-debug-info', "Turns off sass's debugging information")
+		.option('-r, --require <library>', 'Require the given node lib before running commands')
+		.option('-l, --load <frameworkDir>', 'Load the framework or extensions found in the <frameworkDir>')
+		.option('-L, --load-all <frameworksDir>', 'Load all the frameworks or extensions found in <frameworksDir>')
+		.option('-I <importPath>', "Makes files under the <importPath> folder findable by Sass's @import directive")
+		.option('-q, --quiet', 'Quiet mode')
+		.option('--trace', 'Show a full stacktrace on error')
+		.option('--force', 'Allows compass to overwrite existing files')
+		.option('--dry-run', 'Dry Run. Tells you what it plans to do')
+		.option('--boring', 'Turn off colorized output')
+		.option('-c, --config <configFile>', 'Specify the location of the configuration file explicitly')
+		.option('--app <app>', 'Tell compass what kind of application it is integrating with (e.g., rails)')
+		.option('--sass-dir <sourceDir>', 'The source directory where you keep your sass stylesheets')
+		.option('--scss-dir <sourceDir>', 'Alias for --sass-dir')
+		.option('--css-dir <cssDir>', 'The target directory where you keep your CSS files')
+		.option('--images-dir <imagesDir>', 'The directory where you keep your images')
+		.option('--javascripts-dir <jsDir>', 'The directory where you keep your JavaScripts')
+		.option('--fonts-dir <fontsDir>', 'The directory where you keep your fonts')
+		.option('-e, --environment <env>', 'Use sensible defaults for your current environment')
+		.option('-s, --output-style <style>', 'CSS output mode: nested, expanded, compact, compressed')
+		.parent
+
+	.command('create <projectPath>')
+		.description('Create a new compass project')
+		.action(commands.create)
+		.option('--using <pattern>', "A framework's pattern to use when creating the project")
+		.option('-x, --syntax <syntax>', 'Specify the syntax to use when generating stylesheets')
+		.option('--prepare', 'Prepare the project by only creating configuration files')
+		.option('--bare', "Don't generate any Sass or CSS files")
+		.parent
+
+	.command('init <projectType> <projectPath>')
+		.description('Add compass to an existing project')
+		.action(commands.init)
+		.on('help', function(cmd) {
+			cmd.outputIndented('Description', [
+				'Initialize an existing project at the path specified.'
+			]);
+			cmd.outputIndented('Supported Project Types', [
+				'* node'
+			]);
+		})
+		.parent
+
+	.command('watch [<projectPathOrSourceFile>...]')
+		.description('Compile Sass stylesheets to CSS when they change')
+		.action(commands.watch)
+		.option('--poll', 'Check periodically if there have been changes')
+		.on('help', function(cmd) {
+			cmd.outputIndented('Description', [
+				'Watch the project for changes and recompile when they occur.'
+			]);
+		})
+		.parent
+
+
+	// Other Commands
+	.command('config [configFile]')
+		.description('Generate a configuration file for the provided command line options')
+		.action(commands.config)
+		.option('--debug <property>', 'Debug your configuration by printing out details')
+		.option('-p, --property <property>', 'Print out the value of a particular configuration property')
+		.parent
+
+	//.command('extension')
+	//	.description('Manage the list of compass extensions on your system')
+	//	.action(commands.extension)
+	//	.action(extension)
+	//	.parent
+
+	.command('frameworks')
+		.description('List the available frameworks')
+		.action(commands.frameworks)
+		.parent
+
+	.command('grid-img <dimensions> [gridPath]')
+		.description('Generates a grid background image')
+		.action(commands.gridImg)
+		.on('help', function(cmd) {
+			cmd.outputIndented('Description', [
+				'Generates a background image that can be used to check grid alignment.',
+				'',
+				'Height is optional and defaults to 20px',
+				'',
+				'By default, the image generated will be named "grid.png"',
+				'and be found in the images directory.',
+				'',
+				"Unless you need to check layouts in legacy browsers, it's preferrable",
+				'to use the pure CSS3-based grid background mixin:',
+				'',
+				'http://compass-style.org/reference/compass/layout/grid_background/'
+			]);
+			cmd.outputIndented('Examples', [
+				'compass grid-img 40+10 // 40px column, 10px gutter, 20px height',
+				'compass grid-img 40+20x28 // 40px column, 20px gutter, 28px height',
+				'compass grid-img 60+20x28 images/wide_grid.png'
+			]);
+		})
+		.parent
+
+	.command('imports')
+		.description('Emit an imports suitable for passing to the sass command-line')
+		.action(commands.imports)
+		.on('help', function(cmd) {
+			console.log('Prints out the imports known to compass.');
+			console.log('Useful for passing imports to the sass command line:');
+			console.log('  sass -r compass `compass imports` a_file_using_compass.sass');
+		})
+		.parent
+
+	.command('install <extensionPattern> [projectPath]')
+		.description("Install an extension's pattern into your compass project")
+		.action(commands.install)
+		.option('-x, --syntax', 'Specify the syntax to use when generating CSS')
+		.parent
+
+	.command('interactive <projectPath>')
+		.description('Interactively evaluate SassScript')
+		.action(commands.interactive)
+		.parent
+
+	.command('sprite <glob>')
+		.description('Generate an import for your sprites')
+		.action(commands.sprite)
+		.option('-f <spriteFile>', 'Skip the generation of sprite overrides')
+		.on('help', function(cmd) {
+			cmd.outputIndented('Description', [
+				'Generate a sprite import based on the given sprite directory.',
+				'Alternatively, you can simply do this in your sass files:',
+				'',
+				'    @import "sprite-folder/*.png"',
+				'',
+				'And a magical, custom made sprite file will be imported.'
+			]);
+			cmd.outputIndented('Example', [
+				'compass sprite "images/path/to/sprites/*.png"'
+			]);
+		})
+		.parent
+
+	.command('stats [projectPath]')
+		.description('Report statistics about your stylesheets')
+		.action(commands.stats)
+		.on('help', function(cmd) {
+			cmd.outputIndented('Description', [
+				'Compile project at the path specified (or the current',
+				'directory if not specified) and then compute statistics',
+				'for the sass and css files in the project.'
+			]);
+		})
+		.parent
+
+	.command('unpack')
+		.description('Copy an extension into your extensions folder')
+		.action(commands.unpack)
+		.on('help', function(cmd) {
+			cmd.outputIndented('Description', [
+				'Copy an extension into your extensions folder for easy access to the',
+				'source code. This makes it easier to peruse the source in unfamiliar',
+				"projects. It is not recommended that you change other extensions'",
+				'source — this makes it hard to take updates from the original author.',
+				'The following extensions are available:',
+				'',
+				'  * blueprint',
+				'  * compass'
+			]);
+		})
+		.parent
+
+	.command('validate')
+		.description('Validate your generated CSS')
+		.action(commands.validate)
+		.on('help', function(cmd) {
+			cmd.outputIndented('Description', [
+				'Compile project at the path specified or the current',
+				'directory if not specified and then validate the',
+				'generated CSS'
+			]);
+		})
+		.parent
+
+	.parse(process.argv);

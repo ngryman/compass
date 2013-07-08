@@ -2,7 +2,7 @@
     "name": "compass",
     "version": "0.2.0",
     "author": "Nicolas Gryman",
-    "description": "Compass for node.js",
+    "description": "The Compass Stylesheet Authoring Framework helps you build and maintain your stylesheets and makes it easy for you to use stylesheet libraries provided by others.",
     "contributors": [
         "Nicolas Gryman",
         "Jed Hunsaker"
@@ -26,6 +26,7 @@
     "bugs": "https://github.com/ngryman/compass/issues",
     "license": "MIT",
     "dependencies": {
+        "cli-color": "~0.2.2",
         "gitlike-cli": "~0.0.9",
         "node-sass": "~0.5.2"
     },
