@@ -120,7 +120,7 @@ program
 
 	// Other Commands
 	.command('config [configFile]')
-		.description('Generate a configuration file for the provided command line options')
+		.description('Generate a config file for provided command line options')
 		.action(commands.config)
 		.option('--debug <property>', 'Debug your configuration by printing out details')
 		.option('-p, --property <property>', 'Print out the value of a particular configuration property')
