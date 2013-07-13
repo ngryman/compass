@@ -27,6 +27,7 @@
     "license": "MIT",
     "dependencies": {
         "cli-color": "~0.2.2",
+        "flatten": "~0.0.1",
         "gitlike-cli": "~0.0.10",
         "node-sass": "~0.5.2"
     },
