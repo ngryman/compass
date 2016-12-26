@@ -18,9 +18,9 @@
     "author": "Nicolas Gryman",
     "license": "MIT",
     "devDependencies": {
-        "mocha": "1.8.x",
-        "chai": "1.5.x",
-        "express": "3.1.x",
-        "supertest": "0.5.x"
+        "mocha": "~3.2.0",
+        "chai": "~3.5.0",
+        "express": "~4.14.0",
+        "supertest": "~2.0.1"
     }
 }
