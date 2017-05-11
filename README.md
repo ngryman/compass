@@ -1,5 +1,7 @@
 # compass
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/ngryman/compass.svg)](https://greenkeeper.io/)
+
 [Compass](http://compass-style.org) wrapper and middleware for node.js.
 
 ## Install
