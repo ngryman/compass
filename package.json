@@ -19,7 +19,7 @@
     "license": "MIT",
     "devDependencies": {
         "mocha": "~3.3.0",
-        "chai": "~3.5.0",
+        "chai": "~4.1.1",
         "express": "~5.0.0-alpha.3",
         "supertest": "~3.0.0"
     }
